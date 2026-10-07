@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Trinity // Game Foundry</title>
+  <meta name="description" content="Founder preference mapping, concept generation and market validation for Trinity Studios." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="assets/trinity-avatar.png" type="image/png" />
+</head>
+<body>
+  <div class="scanlines"></div>
+  <header class="topbar">
+    <div class="brand-mini">
+      <img src="assets/trinity-avatar.png" alt="Trinity Studios" />
+      <div><strong>TRINITY</strong><span>GAME FOUNDRY // v0.1</span></div>
+    </div>
+    <nav id="nav" aria-label="Main navigation"></nav>
+    <div class="data-actions">
+      <button class="ghost" id="importBtn">Import JSON</button>
+      <button class="ghost" id="exportBtn">Export JSON</button>
+      <input id="importFile" type="file" accept=".json,application/json" hidden />
+    </div>
+  </header>
+  <p id="importStatus" class="import-status" role="status" aria-live="polite" hidden></p>
+
+  <main>
+    <section id="home" class="view active">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow">TRINITY STUDIOS INTERNAL LAB</div>
+          <h1>Find the game at the intersection of <span>desire</span>, <span>market</span> and <span>buildability</span>.</h1>
+          <p>This is not a genre quiz. It maps three founders independently, measures consensus and conflict, turns the shared DNA into concept seeds, then subjects the finalists to a market and Kickstarter reality check.</p>
+          <div class="hero-actions">
+            <button class="primary" data-go="founders">Start founder setup</button>
+            <button class="secondary" id="demoBtn">Load demo answers</button>
+          </div>
+          <div class="triad">
+            <div><b>01</b><span>WANT</span><small>Would we still love this after 18 months?</small></div>
+            <div><b>02</b><span>BUILD</span><small>Can three people create a convincing MVP?</small></div>
+            <div><b>03</b><span>MARKET</span><small>Is there evidence that an audience will pay?</small></div>
+          </div>
+        </div>
+        <div class="hero-logo"><img src="assets/trinity-logo.png" alt="Trinity Studios logo" /></div>
+      </div>
+      <div class="flowline">
+        <div>Founder DNA</div><i>→</i><div>Consensus Engine</div><i>→</i><div>Concept Forge</div><i>→</i><div>Market Gate</div><i>→</i><div>MVP Brief</div>
+      </div>
+    </section>
+
+    <section id="founders" class="view">
+      <div class="section-head"><div><div class="eyebrow">STEP 01</div><h2>Founder setup</h2><p>Three separate profiles. Answers stay independent until Analysis.</p></div><div class="badge">3 FOUNDERS</div></div>
+      <div class="founder-grid" id="founderSetup"></div>
+      <div class="panel mission-panel">
+        <h3>Shared constraints</h3>
+        <div class="form-grid">
+          <label>Target MVP months<input id="mvpMonths" type="number" min="1" max="36" value="6"></label>
+          <label>Cash budget before crowdfunding (€)<input id="mvpBudget" type="number" min="0" step="1000" value="15000"></label>
+          <label>Weekly team hours<input id="teamHours" type="number" min="1" max="240" value="60"></label>
+          <label>Preferred engine<select id="engine"><option>Unreal Engine 5</option><option>Unity</option><option>Godot</option><option>Undecided</option></select></label>
+        </div>
+      </div>
+      <div class="right-actions"><button class="primary" data-go="questionnaire">Open questionnaire</button></div>
+    </section>
+
+    <section id="questionnaire" class="view">
+      <div class="section-head"><div><div class="eyebrow">STEP 02</div><h2>Founder DNA questionnaire</h2><p>Answer separately. Do not negotiate answers while filling this in.</p></div><div id="progressBadge" class="badge">0%</div></div>
+      <div class="question-toolbar">
+        <div id="founderTabs" class="tabs"></div>
+        <select id="sectionSelect"></select>
+      </div>
+      <div id="questionList"></div>
+      <div class="right-actions"><button class="secondary" id="prevSection">Previous section</button><button class="primary" id="nextSection">Next section</button></div>
+    </section>
+
+    <section id="analysis" class="view">
+      <div class="section-head"><div><div class="eyebrow">STEP 03</div><h2>Trinity DNA</h2><p>Where the three of you genuinely align — and where a compromise would poison the project.</p></div><button class="primary" id="recalcBtn">Recalculate</button></div>
+      <div class="kpi-grid" id="kpis"></div>
+      <div class="analysis-grid">
+        <div class="panel"><h3>Shared DNA</h3><div id="dnaBars"></div></div>
+        <div class="panel"><h3>Founder divergence</h3><div id="conflicts"></div></div>
+      </div>
+      <div class="panel"><h3>Decision map</h3><div class="legend"><span class="lg consensus">Consensus</span><span class="lg compromise">Compromise</span><span class="lg conflict">Conflict</span></div><div id="dimensionMatrix" class="matrix"></div></div>
+      <div class="right-actions"><button class="primary" data-go="concepts">Forge concepts</button></div>
+    </section>
+
+    <section id="concepts" class="view">
+      <div class="section-head"><div><div class="eyebrow">STEP 04</div><h2>Concept Forge</h2><p>Rule-based v0.1 seeds derived from your shared DNA. Later this can be upgraded to an AI concept agent.</p></div><button class="primary" id="forgeBtn">Generate / refresh</button></div>
+      <div id="conceptGrid" class="concept-grid"></div>
+      <div class="panel"><h3>Voting</h3><p class="muted">Each founder can independently score every concept from 1–5. Finalists combine founder fit, feasibility and crowdfunding suitability.</p><div id="voteTable"></div></div>
+      <div class="right-actions"><button class="primary" data-go="market">Validate finalists</button></div>
+    </section>
+
+    <section id="market" class="view">
+      <div class="section-head"><div><div class="eyebrow">STEP 05</div><h2>Market Validation Room</h2><p>Do not ask “is the idea cool?” Ask whether evidence says a reachable audience exists and whether Kickstarter can understand the promise.</p></div><div class="badge">EVIDENCE > OPINION</div></div>
+      <div class="market-grid">
+        <div class="panel">
+          <h3>Market Gate score</h3>
+          <div class="gate-fields" id="gateFields"></div>
+          <div class="big-score"><span id="marketScore">—</span><small>/100</small></div>
+          <button class="primary wide" id="calcMarket">Calculate validation score</button>
+        </div>
+        <div class="panel">
+          <h3>Research protocol</h3>
+          <ol class="protocol">
+            <li><b>Comparable games:</b> 10 direct + 10 adjacent titles.</li>
+            <li><b>Steam evidence:</b> reviews, price, release timing, CCU proxies, tags, update cadence.</li>
+            <li><b>Voice of customer:</b> recurring complaints and “I wish this game had…” patterns.</li>
+            <li><b>Crowdfunding:</b> comparable campaigns, goals, backers, average pledge, demo/trailer quality.</li>
+            <li><b>Scope:</b> what must exist in the MVP to make the promise believable.</li>
+            <li><b>Differentiation:</b> explain the hook in one sentence without naming competitors.</li>
+          </ol>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title-row"><h3>Comparable titles / campaigns</h3><button class="secondary" id="addComp">+ Add comparable</button></div>
+        <div class="table-wrap"><table id="compTable"><thead><tr><th>Title</th><th>Type</th><th>Price / Goal</th><th>Reviews / Backers</th><th>Evidence</th><th></th></tr></thead><tbody></tbody></table></div>
+      </div>
+      <div class="panel"><h3>Kill criteria</h3><div class="kill-grid" id="killGrid"></div></div>
+      <div class="right-actions"><button class="primary" data-go="brief">Build MVP brief</button></div>
+    </section>
+
+    <section id="brief" class="view">
+      <div class="section-head"><div><div class="eyebrow">STEP 06</div><h2>MVP / Kickstarter Brief</h2><p>The final output is not “make the whole game.” It is the smallest playable proof that sells the fantasy.</p></div><button class="primary" id="buildBrief">Build brief</button></div>
+      <div id="briefOutput" class="brief-output"></div>
+    </section>
+  </main>
+
+  <footer><span>TRINITY STUDIOS // GAME FOUNDRY v0.1</span><span>Local prototype · data stored in this browser</span></footer>
+  <script src="app.js"></script>
+</body>
+</html>
