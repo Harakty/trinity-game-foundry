@@ -35,7 +35,10 @@ function updateFocusedBaseline(envelope){
  if(!focusedField)return;const el=document.activeElement;
  if(!el?.matches('input,textarea,select'))return;
  const current=readField(envelope.data,focusedField.path);
- if(current.exists&&JSON.stringify(current.value)===JSON.stringify(inputValue(el,focusedField.path)))focusedField.expected=current;
+ if(current.exists&&JSON.stringify(current.value)===JSON.stringify(inputValue(el,focusedField.path))){
+  focusedField.expected=current;
+  if(focusedField.path[0]==='comparables')$$('[data-ci]').forEach(input=>comparableBases.set(input,current.value));
+ }
 }
 
 const views=['home','founders','questionnaire','analysis','concepts','market','brief'];
