@@ -1,0 +1,16 @@
+{
+  "name": "trinity-game-foundry",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-strip-types --test tests/*.test.js",
+    "check": "tsc --noEmit",
+    "dev:api": "wrangler dev --persist-to D:/CodexBuilds/trinity-shared/state",
+    "deploy:api": "wrangler deploy"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "typescript": "latest",
+    "wrangler": "4.148.0"
+  }
+}

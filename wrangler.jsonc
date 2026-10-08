@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "trinity-foundry-api",
+  "main": "worker.ts",
+  "compatibility_date": "2026-10-08",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "observability": { "enabled": true, "head_sampling_rate": 0.1 },
+  "vars": {
+    "ALLOWED_ORIGINS": "https://harakty.github.io,http://localhost:8080,http://127.0.0.1:8080"
+  },
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "trinity-foundry-shared",
+    "database_id": "431dac9a-1946-407b-933f-729f25ce3d79"
+  }]
+}

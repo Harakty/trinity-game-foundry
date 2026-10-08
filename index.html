@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="it">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -13,17 +13,19 @@
   <header class="topbar">
     <div class="brand-mini">
       <img src="assets/trinity-avatar.png" alt="Trinity Studios" />
-      <div><strong>TRINITY</strong><span>GAME FOUNDRY // v0.1</span></div>
+      <div><strong>TRINITY</strong><span>GAME FOUNDRY // v0.2</span></div>
     </div>
     <nav id="nav" aria-label="Main navigation"></nav>
     <div class="data-actions">
-      <button class="ghost" id="importBtn">Import JSON</button>
-      <button class="ghost" id="exportBtn">Export JSON</button>
-      <input id="importFile" type="file" accept=".json,application/json" hidden />
+      <button class="ghost" id="exportBtn">Scarica backup JSON</button>
     </div>
   </header>
-  <p id="importStatus" class="import-status" role="status" aria-live="polite" hidden></p>
 
+  <aside class="shared-toolbar" aria-label="Dati condivisi">
+    <div><strong id="accessLabel">Consultazione condivisa</strong><p id="syncStatus" role="status" aria-live="polite">Caricamento dati online…</p></div>
+    <button class="ghost" id="reloadBtn">Ricarica dati</button><button class="ghost" id="logoutBtn" hidden>Esci dalla modifica</button>
+    <div id="loginPanel"><label for="editToken">Codice personale per modificare le tue risposte</label><div class="login-controls"><input id="editToken" type="password" autocomplete="off" placeholder="Apri il tuo link personale oppure inserisci il codice"><button class="secondary" id="loginBtn">Accedi</button></div><small>Tutti possono leggere. Con il tuo accesso puoi aggiornare il tuo profilo e i tuoi voti.</small></div>
+  </aside>
   <main>
     <section id="home" class="view active">
       <div class="hero-grid">
@@ -32,8 +34,8 @@
           <h1>Find the game at the intersection of <span>desire</span>, <span>market</span> and <span>buildability</span>.</h1>
           <p>This is not a genre quiz. It maps three founders independently, measures consensus and conflict, turns the shared DNA into concept seeds, then subjects the finalists to a market and Kickstarter reality check.</p>
           <div class="hero-actions">
-            <button class="primary" data-go="founders">Start founder setup</button>
-            <button class="secondary" id="demoBtn">Load demo answers</button>
+            <button class="primary" data-go="founders">Profili dei founder</button>
+
           </div>
           <div class="triad">
             <div><b>01</b><span>WANT</span><small>Would we still love this after 18 months?</small></div>
@@ -75,7 +77,7 @@
 
     <section id="analysis" class="view">
       <div class="section-head"><div><div class="eyebrow">STEP 03</div><h2>Trinity DNA</h2><p>Where the three of you genuinely align — and where a compromise would poison the project.</p></div><button class="primary" id="recalcBtn">Recalculate</button></div>
-      <div class="kpi-grid" id="kpis"></div>
+      <div class="kpi-grid" id="kpis"></div><div id="analysisSummary" class="brief-output"></div>
       <div class="analysis-grid">
         <div class="panel"><h3>Shared DNA</h3><div id="dnaBars"></div></div>
         <div class="panel"><h3>Founder divergence</h3><div id="conflicts"></div></div>
@@ -85,15 +87,15 @@
     </section>
 
     <section id="concepts" class="view">
-      <div class="section-head"><div><div class="eyebrow">STEP 04</div><h2>Concept Forge</h2><p>Rule-based v0.1 seeds derived from your shared DNA. Later this can be upgraded to an AI concept agent.</p></div><button class="primary" id="forgeBtn">Generate / refresh</button></div>
-      <div id="conceptGrid" class="concept-grid"></div>
+      <div class="section-head"><div><div class="eyebrow">STEP 04</div><h2>Concept Forge</h2><p>Proposte ragionate e spunti automatici aggiornati con le vostre risposte. Il fit misura le preferenze; la domanda va verificata sul mercato.</p></div><button class="primary" id="forgeBtn">Generate / refresh</button></div>
+      <div id="directionOutput" class="brief-output"></div><details class="panel"><summary>Otto spunti del motore originale e votazione</summary><div id="conceptGrid" class="concept-grid"></div></details>
       <div class="panel"><h3>Voting</h3><p class="muted">Each founder can independently score every concept from 1–5. Finalists combine founder fit, feasibility and crowdfunding suitability.</p><div id="voteTable"></div></div>
       <div class="right-actions"><button class="primary" data-go="market">Validate finalists</button></div>
     </section>
 
     <section id="market" class="view">
       <div class="section-head"><div><div class="eyebrow">STEP 05</div><h2>Market Validation Room</h2><p>Do not ask “is the idea cool?” Ask whether evidence says a reachable audience exists and whether Kickstarter can understand the promise.</p></div><div class="badge">EVIDENCE > OPINION</div></div>
-      <div class="market-grid">
+      <div id="researchOutput" class="brief-output"></div><div class="market-grid">
         <div class="panel">
           <h3>Market Gate score</h3>
           <div class="gate-fields" id="gateFields"></div>
@@ -126,7 +128,7 @@
     </section>
   </main>
 
-  <footer><span>TRINITY STUDIOS // GAME FOUNDRY v0.1</span><span>Local prototype · data stored in this browser</span></footer>
-  <script src="app.js"></script>
+  <footer><span>TRINITY STUDIOS // GAME FOUNDRY v0.2</span><span>Dati condivisi online · modifiche sincronizzate</span></footer>
+  <script type="module" src="app.js"></script>
 </body>
 </html>

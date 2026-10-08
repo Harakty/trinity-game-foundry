@@ -7,3 +7,21 @@
 .import-status.error{border-color:var(--bad);color:var(--bad)}.data-actions button:disabled{opacity:.5;cursor:wait}
 @media(max-width:1000px){.topbar{height:auto;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:12px 14px}.brand-mini{min-width:0}.topbar nav{display:flex;grid-column:1/-1;width:100%}.question-toolbar{position:static}.import-status{margin:14px 18px 0}}
 @media(max-width:650px){.data-actions{flex-direction:column;gap:5px}.data-actions button{font-size:11px;padding:7px 10px}.tabs{flex-wrap:wrap}.tabs button{min-width:0;overflow-wrap:anywhere}.hero-actions{flex-wrap:wrap}#sectionSelect{min-width:0;width:100%}.vote-row>*{min-width:0}.brand-mini span{font-size:8px}}
+/* Shared workspace controls follow the existing Foundry design. */
+.shared-toolbar{max-width:1480px;margin:18px auto;padding:18px 24px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;border:1px solid var(--line,#203540);background:#07141c;color:#d7e6ed}
+.shared-toolbar>div:first-child{flex:1;min-width:220px}
+.shared-toolbar p{margin:6px 0;color:#8fb3bf;font-size:13px}
+.shared-toolbar p.error{color:#ffb4a8}
+#loginPanel{width:100%}
+#loginPanel label,#loginPanel small{display:block;margin:8px 0;color:#8fb3bf}
+.login-controls{display:flex;gap:10px}
+.login-controls input{flex:1;min-width:0}
+[hidden]{display:none!important}
+button:disabled,input:disabled,textarea:disabled,select:disabled{cursor:default;opacity:.72}
+.brief-card a{color:#5edeca;text-decoration:underline;text-underline-offset:3px}
+.brief-card table{min-width:760px}
+.brief-output,.brief-card,.panel,.market-grid>*{min-width:0}
+.brief-card li{margin:8px 0}
+.brief-card p,.brief-card li{overflow-wrap:anywhere}
+details>summary{cursor:pointer;padding:8px 0;color:#80dbcc}
+@media(max-width:600px){.shared-toolbar{margin:12px 14px;padding:14px}.login-controls{flex-direction:column}.shared-toolbar>div:first-child{min-width:0;width:100%}}
