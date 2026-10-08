@@ -62,7 +62,8 @@ export function applyChanges(state: FoundryState, changes: Change[], principal: 
   for (const change of changes) {
     if (!canEdit(change.path, principal)) throw new ApiError(403, 'Puoi modificare soltanto il tuo profilo e i tuoi voti.');
     const current = readPath(next, change.path);
-    if (!equal(current, change.expected)) throw new ApiError(409, 'Questo campo è stato modificato altrove. Ricarica i dati prima di riprovare.');
+    const neutralVote=change.path[0]==='votes'&&!change.expected.exists&&current.exists&&current.value===3;
+    if (!equal(current, change.expected)&&!neutralVote) throw new ApiError(409, 'Questo campo è stato modificato altrove. Ricarica i dati prima di riprovare.');
     writePath(next, change.path, change.value);
   }
   try { validateImportedState(next) } catch { invalid('Risposta o valore non valido. Nessuna modifica salvata.') }

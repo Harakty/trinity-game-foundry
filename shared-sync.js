@@ -35,10 +35,12 @@ export class FoundrySync {
   status(text,error=false){this.onStatus(text,error)}
   store(){if(!this.principal)return;try{localStorage.setItem('trinityPending:'+this.principal.founder,JSON.stringify({pending:this.pending,batch:this.batch}))}catch{this.status('Bozza non salvata sul dispositivo. Tieni aperta questa pagina.',true)}}
   apply(envelope){
+    if(envelope.version<this.version)return false;
     this.version=envelope.version;this.updatedAt=envelope.updatedAt;const data=clone(envelope.data);
     for(const change of [...(this.batch?.changes||[]),...this.pending])write(data,change.path,change.value);
     this.snapshot=clone(data);this.onState(data,envelope);
     try{localStorage.setItem('trinityFoundry',JSON.stringify(data))}catch{}
+    return true;
   }
   async request(path,options={}){
     const response=await fetch(this.base+path,{...options,signal:AbortSignal.timeout(12000),cache:'no-store'});
@@ -91,7 +93,7 @@ export class FoundrySync {
   }
   async poll(){
     if(document.hidden||this.sending||this.pending.length||this.batch||this.blocked)return;
-    try{const result=await this.request('/api/state',{headers:{'If-None-Match':'"'+this.version+'"'}});if(!result.unchanged){this.apply(result);this.status('Aggiornato dalle modifiche del gruppo · '+new Date(result.updatedAt).toLocaleTimeString('it-IT'))}}
+    try{const result=await this.request('/api/state',{headers:{'If-None-Match':'"'+this.version+'"'}});if(!result.unchanged&&this.apply(result))this.status('Aggiornato dalle modifiche del gruppo · '+new Date(result.updatedAt).toLocaleTimeString('it-IT'))}
     catch{this.status('Aggiornamento online non disponibile. Ultimi dati ricevuti visibili.',true)}
   }
   start(){this.interval=setInterval(()=>this.poll(),10000);this.visibility=()=>{if(!document.hidden)this.poll()};document.addEventListener('visibilitychange',this.visibility);window.addEventListener('online',()=>{this.schedule(0);this.poll()});window.addEventListener('beforeunload',event=>{if(this.pending.length||this.batch){event.preventDefault();event.returnValue=''}})}

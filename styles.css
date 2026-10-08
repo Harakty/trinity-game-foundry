@@ -3,9 +3,7 @@
 
 /* Data portability and accessible navigation at narrow widths. */
 .data-actions{display:flex;gap:8px;flex-shrink:0}.topbar nav{min-width:0}
-.import-status{margin:14px auto 0;max-width:1366px;padding:12px 18px;border:1px solid var(--good);border-radius:7px;color:var(--good);background:var(--bg2)}
-.import-status.error{border-color:var(--bad);color:var(--bad)}.data-actions button:disabled{opacity:.5;cursor:wait}
-@media(max-width:1000px){.topbar{height:auto;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:12px 14px}.brand-mini{min-width:0}.topbar nav{display:flex;grid-column:1/-1;width:100%}.question-toolbar{position:static}.import-status{margin:14px 18px 0}}
+@media(max-width:1000px){.topbar{height:auto;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:12px 14px}.brand-mini{min-width:0}.topbar nav{display:flex;grid-column:1/-1;width:100%}.question-toolbar{position:static}}
 @media(max-width:650px){.data-actions{flex-direction:column;gap:5px}.data-actions button{font-size:11px;padding:7px 10px}.tabs{flex-wrap:wrap}.tabs button{min-width:0;overflow-wrap:anywhere}.hero-actions{flex-wrap:wrap}#sectionSelect{min-width:0;width:100%}.vote-row>*{min-width:0}.brand-mini span{font-size:8px}}
 /* Shared workspace controls follow the existing Foundry design. */
 .shared-toolbar{max-width:1480px;margin:18px auto;padding:18px 24px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;border:1px solid var(--line,#203540);background:#07141c;color:#d7e6ed}

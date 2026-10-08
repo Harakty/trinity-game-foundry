@@ -8,21 +8,27 @@ let state=loadState(); let founderIndex=0; let sectionIndex=0;
 function loadState(){try{const cached=JSON.parse(localStorage.getItem('trinityFoundry')||'null');return cached?validateImportedState(cached):structuredClone(defaultState)}catch{return structuredClone(defaultState)}}
 function save(){state.concepts=computeConcepts(state);sharing?.enqueue(state,focusedField);try{localStorage.setItem('trinityFoundry',JSON.stringify(state))}catch{}enforceAccess()}
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const comparableBases=new WeakMap();
 function inputPath(el){
  if(el.matches('[data-f]'))return ['founders',+el.dataset.f,el.dataset.key];
  if(el.matches('[data-textq]'))return ['answers',founderIndex,el.dataset.textq];
  if(el.matches('[data-vote]'))return ['votes',el.dataset.vote,+el.dataset.vf];
  if(el.matches('[data-gate]'))return ['market',el.dataset.gate];
- if(el.matches('[data-ci]'))return ['comparables',+el.dataset.ci,el.dataset.ck];
+ if(el.matches('[data-ci]'))return ['comparables'];
  if(['mvpMonths','mvpBudget','teamHours','engine'].includes(el.id))return ['shared',el.id];
  return null;
 }
 function readField(data,path){let value=data;for(const key of path){if(value==null||!Object.hasOwn(value,key))return {exists:false};value=value[key]}return {exists:true,value:structuredClone(value)}}
-function inputValue(el,path){return path[0]==='votes'||path[0]==='market'||(path[0]==='shared'&&path[1]!=='engine')?Number(el.value):el.value}
+function inputValue(el,path){
+ if(path[0]==='comparables'){
+  const rows=[];$$('[data-ci]').forEach(input=>{const index=+input.dataset.ci;rows[index]??={};rows[index][input.dataset.ck]=input.value});return rows;
+ }
+ return path[0]==='votes'||path[0]==='market'||(path[0]==='shared'&&path[1]!=='engine')?Number(el.value):el.value;
+}
 document.addEventListener('focusin',e=>{
  const el=e.target,path=el.matches('input,textarea,select')&&!el.disabled?inputPath(el):null;
  focusedField=path?{path,expected:readField(state,path)}:null;
- if(focusedField?.expected.exists)focusedField.expected.value=inputValue(el,path);
+ if(focusedField?.expected.exists)focusedField.expected.value=path[0]==='comparables'?structuredClone(comparableBases.get(el)||inputValue(el,path)):inputValue(el,path);
 });
 document.addEventListener('focusout',()=>{setTimeout(()=>{if(!document.activeElement?.matches('input,textarea,select')){focusedField=null;refreshVisible()}},0)});
 function updateFocusedBaseline(envelope){
@@ -94,7 +100,7 @@ function renderMarket(){ $('#researchOutput').innerHTML=renderResearch(state,res
  $$('[data-gate]').forEach(r=>r.oninput=()=>{state.market[r.dataset.gate]=+r.value;$('#gv-'+r.dataset.gate).textContent=r.value;save()});renderCompTable();renderKill();calcMarket();}
 function calcMarket(){const known=gateDefs.every(([id])=>Number.isFinite(state.market[id]));$('#marketScore').textContent=known?Math.round(gateDefs.reduce((n,[id])=>n+state.market[id],0)/gateDefs.length):'—'}
 $('#calcMarket').onclick=calcMarket;
-function renderCompTable(){const tb=$('#compTable tbody');tb.innerHTML=state.comparables.map((c,i)=>`<tr><td><input data-ci="${i}" data-ck="title" value="${esc(c.title||'')}"></td><td><select data-ci="${i}" data-ck="type"><option ${c.type==='Steam'?'selected':''}>Steam</option><option ${c.type==='Kickstarter'?'selected':''}>Kickstarter</option><option ${c.type==='Adjacent'?'selected':''}>Adjacent</option></select></td><td><input data-ci="${i}" data-ck="price" value="${esc(c.price||'')}"></td><td><input data-ci="${i}" data-ck="signal" value="${esc(c.signal||'')}"></td><td><input data-ci="${i}" data-ck="evidence" value="${esc(c.evidence||'')}"></td><td><button class="ghost" data-delc="${i}">×</button></td></tr>`).join('');$$('[data-ci]').forEach(x=>x.onchange=()=>{state.comparables[+x.dataset.ci][x.dataset.ck]=x.value;save()});$$('[data-delc]').forEach(b=>b.onclick=()=>{state.comparables.splice(+b.dataset.delc,1);save();renderCompTable()})}
+function renderCompTable(){const tb=$('#compTable tbody');tb.innerHTML=state.comparables.map((c,i)=>`<tr><td><input data-ci="${i}" data-ck="title" value="${esc(c.title||'')}"></td><td><select data-ci="${i}" data-ck="type"><option ${c.type==='Steam'?'selected':''}>Steam</option><option ${c.type==='Kickstarter'?'selected':''}>Kickstarter</option><option ${c.type==='Adjacent'?'selected':''}>Adjacent</option></select></td><td><input data-ci="${i}" data-ck="price" value="${esc(c.price||'')}"></td><td><input data-ci="${i}" data-ck="signal" value="${esc(c.signal||'')}"></td><td><input data-ci="${i}" data-ck="evidence" value="${esc(c.evidence||'')}"></td><td><button class="ghost" data-delc="${i}">×</button></td></tr>`).join('');const base=structuredClone(state.comparables);$$('[data-ci]').forEach(x=>{comparableBases.set(x,base);x.onchange=()=>{if(!state.comparables[+x.dataset.ci]){sharing.status('La riga è stata rimossa altrove. Ricarica i dati prima di modificare.',true);return}state.comparables[+x.dataset.ci][x.dataset.ck]=x.value;save()}});$$('[data-delc]').forEach(b=>b.onclick=()=>{state.comparables.splice(+b.dataset.delc,1);save();renderCompTable()})}
 $('#addComp').onclick=()=>{state.comparables.push({title:'',type:'Steam',price:'',signal:'',evidence:''});save();renderCompTable()};
 function renderKill(){const kills=[['No audience signal','No cluster of comparable games/campaigns shows meaningful demand.'],['MVP cannot sell the fantasy','The minimum convincing demo requires content or infrastructure beyond current reach.'],['Hook needs a paragraph','If the differentiator cannot be understood in one sentence, campaign conversion is at risk.'],['Founder veto','A core pillar lands in strong conflict territory for at least one founder.'],['Acquisition impossible','There is no identifiable community/channel where likely backers already gather.'],['Economics fail','Realistic price/pledge levels cannot support the production plan.']];$('#killGrid').innerHTML=kills.map(([a,b])=>`<div class="kill"><b>${a}</b><p>${b}</p></div>`).join('')}
 
